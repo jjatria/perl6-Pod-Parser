@@ -1,5 +1,5 @@
 use v6;
-module Pod::Parser;
+class Pod::Parser;
 
 
 =begin pod
