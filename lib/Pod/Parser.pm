@@ -29,6 +29,11 @@ method parse (Str $string) {
 			next;
 		}
 		if $in_pod {
+			if $row ~~ m/^ \=head1 \s+ .* $/ {
+				self.include_pod;
+				self.data.push($row);
+				next;
+			}
 			$pod ~= "$row\n";
 			next;
 		}
