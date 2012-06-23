@@ -39,6 +39,15 @@ method parse (Str $string) {
 		}
 		$text ~= "$row\n";
 	}
+
+	# after ending all the rows:
+	if $in_pod {
+		die "file ended in the middle of a pod";
+	}
+	if $text ne '' {
+		@data.push($text);
+	}
+
 	return @data;
 }
 
