@@ -13,14 +13,15 @@ my $in_pod = 0;
 my $pod = '';
 my $text = '';
 
+has @.data;
+
 method parse (Str $string) {
 	my @lines = $string.split("\n");
-	my @data;
 	for @lines -> $row {
 		if $row ~~ m/^\=begin \s+ pod \s* $/ {
 			$in_pod = 1;
 			if $text ne '' {
-				@data.push($text);
+				self.data.push($text);
 				$text = '';
 			}
 			next;
@@ -28,7 +29,7 @@ method parse (Str $string) {
 		if $row ~~ m/^\=end \s+ pod \s* $/ {
 			$in_pod = 0;
 			if $pod ne '' {
-				@data.push($pod);
+				self.data.push($pod);
 				$pod = '';
 			}
 			next;
@@ -45,10 +46,10 @@ method parse (Str $string) {
 		die "file ended in the middle of a pod";
 	}
 	if $text ne '' {
-		@data.push($text);
+		self.data.push($text);
 	}
 
-	return @data;
+	return self.data;
 }
 
 method parse_file (Str $filename) {
