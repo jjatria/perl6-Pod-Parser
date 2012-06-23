@@ -8,7 +8,7 @@ Text in name
 
 =head1 SYNOPSIS
 
-    some verbatime
+    some verbatim
     text
 
 =end pod
