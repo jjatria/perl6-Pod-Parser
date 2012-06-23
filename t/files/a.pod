@@ -1,0 +1,17 @@
+text before
+
+=begin pod
+
+=head1 NAME
+
+Text in name
+
+=head1 SYNOPSIS
+
+    some verbatime
+    text
+
+=end pod
+
+text after
+
