@@ -20,18 +20,12 @@ method parse (Str $string) {
 	for @lines -> $row {
 		if $row ~~ m/^\=begin \s+ pod \s* $/ {
 			$in_pod = 1;
-			if $text ne '' {
-				self.data.push($text);
-				$text = '';
-			}
+			self.include_text;
 			next;
 		}
 		if $row ~~ m/^\=end \s+ pod \s* $/ {
 			$in_pod = 0;
-			if $pod ne '' {
-				self.data.push($pod);
-				$pod = '';
-			}
+			self.include_pod;
 			next;
 		}
 		if $in_pod {
@@ -45,11 +39,22 @@ method parse (Str $string) {
 	if $in_pod {
 		die "file ended in the middle of a pod";
 	}
-	if $text ne '' {
-		self.data.push($text);
-	}
+	self.include_text;
 
 	return self.data;
+}
+
+method include_text () {
+	if $text ne '' {
+		self.data.push($text);
+		$text = '';
+	}
+}
+method include_pod () {
+	if $pod ne '' {
+		self.data.push($pod);
+		$pod = '';
+	}
 }
 
 method parse_file (Str $filename) {
