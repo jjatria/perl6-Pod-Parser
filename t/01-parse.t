@@ -12,9 +12,9 @@ my @result = $pp.parse_file('t/files/a.pod');
 is_deeply @result, Array.new(
 	{type => 'text', content => "text before\n\n"},
 	{type => 'pod' , content => "\n"},
-	"=head1 NAME",
+	{type => 'head1', content => 'NAME'},
 	{type => 'pod', content => "\nText in name\n\n"},
-	"=head1 SYNOPSIS",
+	{type => 'head1', content => 'SYNOPSIS'},
 	{type => 'pod', content => "\n    some verbatim\n    text\n\n"},
 	{type => 'text', content => "\ntext after\n\n\n"},
 	), 'parse a.pod';

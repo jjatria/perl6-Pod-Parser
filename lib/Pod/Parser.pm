@@ -29,9 +29,9 @@ method parse (Str $string) {
 			next;
 		}
 		if $in_pod {
-			if $row ~~ m/^ \=head1 \s+ .* $/ {
+			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
 				self.include_pod;
-				self.data.push($row);
+				self.data.push({ type => 'head1', content => "$0" }); # $0 needs to be forcibly stringified here
 				next;
 			}
 			$pod ~= "$row\n";
