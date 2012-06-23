@@ -10,13 +10,13 @@ isa_ok $pp, 'Pod::Parser';
 
 my @result = $pp.parse_file('t/files/a.pod');
 is_deeply @result, Array.new(
-	"text before\n\n",
-	"\n",
+	{type => 'text', content => "text before\n\n"},
+	{type => 'pod' , content => "\n"},
 	"=head1 NAME",
-	"\nText in name\n\n",
+	{type => 'pod', content => "\nText in name\n\n"},
 	"=head1 SYNOPSIS",
-	"\n    some verbatim\n    text\n\n",
-	"\ntext after\n\n\n",
+	{type => 'pod', content => "\n    some verbatim\n    text\n\n"},
+	{type => 'text', content => "\ntext after\n\n\n"},
 	), 'parse a.pod';
 
 done;

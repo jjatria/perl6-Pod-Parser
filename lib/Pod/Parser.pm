@@ -51,13 +51,13 @@ method parse (Str $string) {
 
 method include_text () {
 	if $text ne '' {
-		self.data.push($text);
+		self.data.push({ type => 'text', content => $text });
 		$text = '';
 	}
 }
 method include_pod () {
 	if $pod ne '' {
-		self.data.push($pod);
+		self.data.push({ type => 'pod', content => $pod });
 		$pod = '';
 	}
 }
