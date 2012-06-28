@@ -34,7 +34,7 @@ method parse (Str $string) {
 		if $in_pod {
 			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
 				self.end_pod;
-				self.head1("$0"); # $0 needs to be forcibly stringified here
+				self.head1($0.Str);
 				next;
 			}
 			if $row ~~ m/^\s+\S/ {
