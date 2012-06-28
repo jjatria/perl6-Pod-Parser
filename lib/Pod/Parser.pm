@@ -27,21 +27,13 @@ method parse (Str $string) {
 		}
 		if $row ~~ m/^\=end \s+ pod \s* $/ {
 			$in_pod = 0;
-			if $in_verbatim {
-				self.include_verbatim;
-			} else {
-				self.include_pod;
-			}
+			self.end_pod;
 			next;
 		}
 
 		if $in_pod {
 			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
-				if $in_verbatim {
-					self.include_verbatim;
-				} else {
-					self.include_pod;
-				}
+				self.end_pod;
 				self.head1("$0"); # $0 needs to be forcibly stringified here
 				next;
 			}
@@ -85,11 +77,21 @@ method include_text () {
 		$text = '';
 	}
 }
+
+method end_pod() {
+	if $in_verbatim {
+		self.include_verbatim;
+	} else {
+		self.include_pod;
+	}
+	return;
+}
 method include_pod () {
 	if $pod ne '' {
 		self.data.push({ type => 'pod', content => $pod });
 		$pod = '';
 	}
+	return;
 }
 
 method include_verbatim () {
