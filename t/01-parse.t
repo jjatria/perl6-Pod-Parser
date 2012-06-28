@@ -15,7 +15,7 @@ is_deeply @result, Array.new(
 	{type => 'head1', content => 'NAME'},
 	{type => 'pod', content => "\nText in name\n\n"},
 	{type => 'head1', content => 'SYNOPSIS'},
-	{type => 'pod', content => "\n    some verbatim\n    text\n\n"},
+	{type => 'verbatim', content => "    some verbatim\n    text\n\n"},
 	{type => 'text', content => "\ntext after\n\n\n"},
 	), 'parse a.pod';
 

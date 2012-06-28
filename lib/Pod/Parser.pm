@@ -10,7 +10,9 @@ Pod::Parser - parsing files with POD in them (Perl 6 syntax)
 =end pod
 
 my $in_pod = 0;
+my $in_verbatim = 0;
 my $pod = '';
+my $verbatim = '';
 my $text = '';
 
 has @.data;
@@ -25,18 +27,40 @@ method parse (Str $string) {
 		}
 		if $row ~~ m/^\=end \s+ pod \s* $/ {
 			$in_pod = 0;
-			self.include_pod;
+			if $in_verbatim {
+				self.include_verbatim;
+			} else {
+				self.include_pod;
+			}
 			next;
 		}
+
 		if $in_pod {
 			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
-				self.include_pod;
-				self.data.push({ type => 'head1', content => "$0" }); # $0 needs to be forcibly stringified here
+				if $in_verbatim {
+					self.include_verbatim;
+				} else {
+					self.include_pod;
+				}
+				self.head1("$0"); # $0 needs to be forcibly stringified here
 				next;
+			}
+			if $row ~~ m/^\s+\S/ {
+				$in_verbatim = 1;
+			}
+
+			if $in_verbatim {
+				if $row ~~ m/^\S/ {
+					self.include_verbatim;
+				} else {
+					$verbatim ~= "$row\n";
+					next;
+				}
 			}
 			$pod ~= "$row\n";
 			next;
 		}
+
 		$text ~= "$row\n";
 	}
 
@@ -47,6 +71,12 @@ method parse (Str $string) {
 	self.include_text;
 
 	return self.data;
+}
+
+
+method head1($text) {
+	self.data.push({ type => 'head1', content => $text });
+	return;
 }
 
 method include_text () {
@@ -61,6 +91,17 @@ method include_pod () {
 		$pod = '';
 	}
 }
+
+method include_verbatim () {
+	if $verbatim ne '' {
+		self.data.push({ type => 'verbatim', content => $verbatim });
+		$verbatim = '';
+	}
+	$in_verbatim = 0;
+	return;
+}
+
+
 
 method parse_file (Str $filename) {
 	my $string = slurp($filename);
