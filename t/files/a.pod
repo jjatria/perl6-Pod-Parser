@@ -11,6 +11,16 @@ Text in name
     some verbatim
     text
 
+=head1 OTHER
+
+real text
+more text
+
+  verbatim
+      more verb
+
+text
+
 =end pod
 
 text after

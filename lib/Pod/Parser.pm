@@ -38,6 +38,7 @@ method parse (Str $string) {
 				next;
 			}
 			if $row ~~ m/^\s+\S/ {
+				self.include_pod;
 				$in_verbatim = 1;
 			}
 
