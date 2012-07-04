@@ -18,7 +18,7 @@ my @expected = Array.new(
 	{type => 'text', content => "\ntext after\n\n\n"},
 	);
 
-plan 3 + @expected.elems;
+plan 4 + @expected.elems;
 
 use Pod::Parser;
 ok 1, 'Loading module succeeded';
@@ -32,5 +32,14 @@ for 0 .. @expected.elems-1 -> $i {
 }
 
 is_deeply @result, @expected, 'parse a.pod';
+
+try {
+	$pp.parse_file('t/files/two-titles.pod');
+	CATCH {
+		when X::Parser {
+			is $_.msg, 'TITLE set twice', 'exception on duplicate TITLE';
+		}
+	}
+}
 
 done;

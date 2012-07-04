@@ -1,6 +1,8 @@
 use v6;
 class Pod::Parser;
 
+use Pod::Parser::Common;
+
 =begin pod
 
 =head1 NAME
@@ -74,8 +76,8 @@ method parse (Str $string) {
 
 # TODO throw exception objects!
 method set_title($text) {
-	die 'TITLE set twice' if self.title;
-	die 'No value given for TITLE' if $text !~~ /\S/;
+	X::Parser.new(msg => 'TITLE set twice').throw if self.title;
+	X::Parser.new(msg => 'No value given for TITLE').throw if $text !~~ /\S/;
 	#die 'No POD should be before TITLE' if self.data;
 
 	$.title = $text;
@@ -126,6 +128,5 @@ method parse_file (Str $filename) {
 	my $string = slurp($filename);
 	self.parse($string);
 }
-
 
 # vim: ft=perl6
