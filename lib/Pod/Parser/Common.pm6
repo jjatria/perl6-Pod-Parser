@@ -1,4 +1,4 @@
-class X::Parser is Exception {
+class X::Pod::Parser is Exception {
     has $.msg;
 	has $.text;
 

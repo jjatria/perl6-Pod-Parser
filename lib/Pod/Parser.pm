@@ -21,6 +21,7 @@ my $pod = '';
 my $verbatim = '';
 my $text = '';
 
+has $.depth is rw = 0;
 has @.data;
 has $.title is rw;
 
@@ -54,12 +55,15 @@ method parse (Str $string) {
 			}
 			# TODO implement the following tags:
 			if $row ~~ m/^\=over \s+ (\d+) \s* $/ {
+				self.over($0.Str);
 				next;
 			}
 			if $row ~~ m/^\=item \s+ (.*) $/ {
+				self.item($0.Str);
 				next;
 			}
 			if $row ~~ m/^\=back\s*/ {
+				self.back;
 				next;
 			}
 			if $row ~~ m/^\=begin\s+code\s*$/ {
@@ -76,7 +80,7 @@ method parse (Str $string) {
 			# TODO: what about '=head' or '=MMMMMM'  or  '=begin usage' ?
 
 			if $row ~~ m/^ \= / {
-				X::Parser.new(msg => "Unknown tag", text => $row).throw;
+				X::Pod::Parser.new(msg => "Unknown tag", text => $row).throw;
 			}
 
 			if $row ~~ m/^\s+\S/ {
@@ -101,17 +105,34 @@ method parse (Str $string) {
 
 	# after ending all the rows:
 	if $in_pod {
-		die "file ended in the middle of a pod";
+		X::Pod::Parser.new(msg => 'file ended in the middle of a pod', text => '').throw;
 	}
 	self.include_text;
 
 	return self.data;
 }
 
+method over($text) {
+	self.include_pod;
+	self.depth++;
+	self.data.push({ type => 'over', content => $text });
+	return;
+}
+
+method item($text) {
+	self.include_pod;
+	self.data.push({ type => 'item', content => $text });
+}
+
+method back() {
+	self.include_pod;
+	self.depth--;
+}
+
 method set_title($text) {
-	X::Parser.new(msg => 'TITLE set twice', text => $text).throw if self.title;
-	X::Parser.new(msg => 'No value given for TITLE', text => $text).throw if $text !~~ /\S/;
-	#die 'No POD should be before TITLE' if self.data;
+	X::Pod::Parser.new(msg => 'TITLE set twice', text => $text).throw if self.title;
+	X::Pod::Parser.new(msg => 'No value given for TITLE', text => $text).throw if $text !~~ /\S/;
+	#X::Pod::Parser.new(msg => 'No POD should be before TITLE', text => $text).throw if self.data;
 
 	$.title = $text;
 	self.data.push({ type => 'title', content => $text });

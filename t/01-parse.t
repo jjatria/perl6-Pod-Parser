@@ -39,7 +39,7 @@ is_deeply @result, @expected, 'parse a.pod';
 try {
 	$pp.parse_file('t/files/two-titles.pod');
 	CATCH {
-		when X::Parser {
+		when X::Pod::Parser {
 			is $_.msg, 'TITLE set twice', 'exception on duplicate TITLE';
 		}
 	}
@@ -48,7 +48,7 @@ try {
 try {
 	$pp.parse_file('t/files/unknown-tag.pod');
 	CATCH {
-		when X::Parser {
+		when X::Pod::Parser {
 			is $_.msg, 'Unknown tag', 'exception on unknown =tag';
 		}
 	}
