@@ -23,6 +23,10 @@ more text
 
 text
 
+=head2 subtitle
+
+subtext
+
 =end pod
 
 text after

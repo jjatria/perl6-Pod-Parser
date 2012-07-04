@@ -40,9 +40,9 @@ method parse (Str $string) {
 				self.set_title($0.Str);
 				next;
 			}
-			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
+			if $row ~~ m/^ \=(head<[12]>) \s+ (.*) $/ {
 				self.end_pod;
-				self.head1($0.Str);
+				self.head($0.Str, $1.Str);
 				next;
 			}
 			if $row ~~ m/^\s+\S/ {
@@ -85,8 +85,8 @@ method set_title($text) {
 	return;
 }
 
-method head1($text) {
-	self.data.push({ type => 'head1', content => $text });
+method head($type, $text) {
+	self.data.push({ type => $type, content => $text });
 	return;
 }
 
