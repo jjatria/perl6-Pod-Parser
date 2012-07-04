@@ -9,6 +9,10 @@ use Pod::Parser::Common;
 
 Pod::Parser - parsing files with POD in them (Perl 6 syntax)
 
+=head1 WARNING
+
+The generated data structure is not final yet
+
 =end pod
 
 my $in_pod = 0;
@@ -23,6 +27,7 @@ has $.title is rw;
 method parse (Str $string) {
 	@.data = ();
 	$.title = '';
+
 	my @lines = $string.split("\n");
 	for @lines -> $row {
 		if $row ~~ m/^\=begin \s+ pod \s* $/ {
@@ -42,14 +47,38 @@ method parse (Str $string) {
 				self.set_title($0.Str);
 				next;
 			}
-			if $row ~~ m/^ \=(head<[12]>) \s+ (.*) $/ {
+			if $row ~~ m/^ \=(head<[12345]>) \s+ (.*) $/ {
 				self.end_pod;
 				self.head($0.Str, $1.Str);
 				next;
 			}
+			# TODO implement the following tags:
+			if $row ~~ m/^\=over \s+ (\d+) \s* $/ {
+				next;
+			}
+			if $row ~~ m/^\=item \s+ (.*) $/ {
+				next;
+			}
+			if $row ~~ m/^\=back\s*/ {
+				next;
+			}
+			if $row ~~ m/^\=begin\s+code\s*$/ {
+				next;
+			}
+			if $row ~~ m/^\=end\s+code\s*$/ {
+				next;
+			}
+
+			# TODO special exception for Perl5-ism?
+			#if $row ~~ m/^\=cut\s*/ {
+			#	next;
+			#}
+			# TODO: what about '=head' or '=MMMMMM'  or  '=begin usage' ?
+
 			if $row ~~ m/^ \= / {
 				X::Parser.new(msg => "Unknown tag", text => $row).throw;
 			}
+
 			if $row ~~ m/^\s+\S/ {
 				self.include_pod;
 				$in_verbatim = 1;
