@@ -2,6 +2,8 @@ text before
 
 =begin pod
 
+=TITLE document POD
+
 =head1 NAME
 
 Text in name

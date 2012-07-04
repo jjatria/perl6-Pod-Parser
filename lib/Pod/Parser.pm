@@ -16,6 +16,7 @@ my $verbatim = '';
 my $text = '';
 
 has @.data;
+has $.title is rw;
 
 method parse (Str $string) {
 	my @lines = $string.split("\n");
@@ -32,6 +33,11 @@ method parse (Str $string) {
 		}
 
 		if $in_pod {
+			if $row ~~ m/^ \=TITLE \s+ (.*) $/ {
+				self.end_pod;
+				self.set_title($0.Str);
+				next;
+			}
 			if $row ~~ m/^ \=head1 \s+ (.*) $/ {
 				self.end_pod;
 				self.head1($0.Str);
@@ -66,6 +72,16 @@ method parse (Str $string) {
 	return self.data;
 }
 
+# TODO throw exception objects!
+method set_title($text) {
+	die 'TITLE set twice' if self.title;
+	die 'No value given for TITLE' if $text !~~ /\S/;
+	#die 'No POD should be before TITLE' if self.data;
+
+	$.title = $text;
+	self.data.push({ type => 'title', content => $text });
+	return;
+}
 
 method head1($text) {
 	self.data.push({ type => 'head1', content => $text });

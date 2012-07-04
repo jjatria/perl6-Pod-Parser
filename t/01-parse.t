@@ -4,6 +4,8 @@ use Test;
 my @expected = Array.new(
 	{type => 'text', content => "text before\n\n"},
 	{type => 'pod' , content => "\n"},
+	{type => 'title', content => 'document POD'},
+	{type => 'pod' , content => "\n"},
 	{type => 'head1', content => 'NAME'},
 	{type => 'pod', content => "\nText in name\n\n"},
 	{type => 'head1', content => 'SYNOPSIS'},
@@ -26,7 +28,7 @@ isa_ok $pp, 'Pod::Parser';
 
 my @result = $pp.parse_file('t/files/a.pod');
 for 0 .. @expected.elems-1 -> $i {
-	is @result[$i], @expected[$i], "part $i";
+	is @result[$i], @expected[$i], "part $i - {@expected[$i]<type>}";
 }
 
 is_deeply @result, @expected, 'parse a.pod';
