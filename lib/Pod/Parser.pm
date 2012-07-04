@@ -21,6 +21,8 @@ has @.data;
 has $.title is rw;
 
 method parse (Str $string) {
+	@.data = ();
+	$.title = '';
 	my @lines = $string.split("\n");
 	for @lines -> $row {
 		if $row ~~ m/^\=begin \s+ pod \s* $/ {
@@ -44,6 +46,9 @@ method parse (Str $string) {
 				self.end_pod;
 				self.head($0.Str, $1.Str);
 				next;
+			}
+			if $row ~~ m/^ \= / {
+				X::Parser.new(msg => "Unknown tag", text => $row).throw;
 			}
 			if $row ~~ m/^\s+\S/ {
 				self.include_pod;
@@ -74,10 +79,9 @@ method parse (Str $string) {
 	return self.data;
 }
 
-# TODO throw exception objects!
 method set_title($text) {
-	X::Parser.new(msg => 'TITLE set twice').throw if self.title;
-	X::Parser.new(msg => 'No value given for TITLE').throw if $text !~~ /\S/;
+	X::Parser.new(msg => 'TITLE set twice', text => $text).throw if self.title;
+	X::Parser.new(msg => 'No value given for TITLE', text => $text).throw if $text !~~ /\S/;
 	#die 'No POD should be before TITLE' if self.data;
 
 	$.title = $text;

@@ -20,7 +20,7 @@ my @expected = Array.new(
 	{type => 'text', content => "\ntext after\n\n\n"},
 	);
 
-plan 4 + 2 * @expected.elems;
+plan 5 + 2 * @expected.elems;
 
 use Pod::Parser;
 ok 1, 'Loading module succeeded';
@@ -44,5 +44,15 @@ try {
 		}
 	}
 }
+
+try {
+	$pp.parse_file('t/files/unknown-tag.pod');
+	CATCH {
+		when X::Parser {
+			is $_.msg, 'Unknown tag', 'exception on unknown =tag';
+		}
+	}
+}
+
 
 done;
