@@ -13,6 +13,27 @@ Pod::Parser - parsing files with POD in them (Perl 6 syntax)
 
 The generated data structure is not final yet
 
+  use Pod::Parser;
+  my $pp = Pod::Parser.new;
+  my @data = $pp.parse_file('path/to/file.pod');
+
+or
+
+  my $pod = 'path/to/file.pod'.IO.slurp;
+  my @data = $pp.parse($pod);
+
+=head2 Example
+
+  use Pod::Parser;
+  my $pp = Pod::Parser.new;
+  my @data = $pp.parse_file('path/to/file.pod');
+  CATCH {
+    when X::Pod::Parser {
+      warn $_;
+      return;
+    }
+  }
+
 =end pod
 
 my $in_pod = 0;
