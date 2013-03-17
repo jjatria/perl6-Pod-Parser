@@ -1,23 +1,25 @@
 use v6;
 use Test;
 
+my $N = chr(13) ~ chr(10);
+
 my @expected = Array.new(
-	{type => 'text', content => "text before\n\n"},
-	{type => 'pod' , content => "\n"},
+	{type => 'text', content => "text before$N$N"},
+	{type => 'pod' , content => "$N"},
 	{type => 'title', content => 'document POD'},
-	{type => 'pod' , content => "\n"},
+	{type => 'pod' , content => "$N"},
 	{type => 'head1', content => 'NAME'},
-	{type => 'pod', content => "\nText in name\n\n"},
+	{type => 'pod', content => "{$N}Text in name$N$N"},
 	{type => 'head1', content => 'SYNOPSIS'},
-	{type => 'pod',   content => "\n"},
-	{type => 'verbatim', content => "    some verbatim\n    text\n\n"},
+	{type => 'pod',   content => "$N"},
+	{type => 'verbatim', content => "    some verbatim$N    text$N$N"},
 	{type => 'head1', content => 'OTHER'},
-	{type => 'pod', content => "\nreal text\nmore text\n\n"},
-	{type => 'verbatim', content => "  verbatim\n      more verb\n\n"},
-	{type => 'pod', content => "text\n\n"},
+	{type => 'pod', content => "{$N}real text{$N}more text$N$N"},
+	{type => 'verbatim', content => "  verbatim$N      more verb$N$N"},
+	{type => 'pod', content => "text$N$N"},
 	{type => 'head2', content => "subtitle"},
-	{type => 'pod', content => "\nsubtext\n\n"},
-	{type => 'text', content => "\ntext after\n\n\n"},
+	{type => 'pod', content => "{$N}subtext$N$N"},
+	{type => 'text', content => "{$N}text after$N$N$N"},
 	);
 
 plan 5 + 2 * @expected.elems;
