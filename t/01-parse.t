@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-my $N = chr(13) ~ chr(10);
+my $N = $*KERNEL.name eq "win32" ?? chr(13) ~ chr(10) !! "\n";
 
 my @expected = Array.new(
 	{type => 'text', content => "text before$N$N"},
