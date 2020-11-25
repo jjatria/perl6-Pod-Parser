@@ -57,4 +57,4 @@ try {
 }
 
 
-done;
+done-testing;
