@@ -1,7 +1,7 @@
 {
-    "perl"        : "6.d",
+    "perl"        : "6.*",
     "name"        : "Pod::Parser",
-    "version"     : "*",
+    "version"     : "0.1.0",
     "description" : "Naive parser for Perl 6 style POD documents",
     "provides"    : {
         "Pod::Parser" : "lib/Pod/Parser.pm",
